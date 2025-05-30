@@ -81,7 +81,7 @@ export function SailingView() {
               <span className="text-lg font-medium">%</span>
             </div>
             <div className="mt-2 text-xs text-slate-500">
-              Lower bids have a better chance of winning, but reduce your payout.
+              Higher bids have a better chance of winning, but it also means you will be paying more interest!
             </div>
             <Button className="w-full mt-3" type="submit">
               Submit Bid

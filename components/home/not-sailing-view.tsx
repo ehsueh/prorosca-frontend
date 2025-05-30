@@ -322,7 +322,7 @@ export function NotSailingView() {
                   </div>
                 </div>
                 <p className="text-xs text-slate-500 mt-1">
-                  Lower bids increase your chances of winning but reduce your payout
+                  Higher bids have a better chance of winning, but it also means you will be paying more interest!
                 </p>
               </div>
               
