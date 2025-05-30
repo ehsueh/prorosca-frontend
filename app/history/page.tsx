@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Calendar, ChevronRight, ChevronDown, TrendingUp, TrendingDown, Flag, CheckCircle, XCircle } from "lucide-react";
 import { mockHistoryData } from "@/lib/mock-data";
 import { formatDate, formatCurrency } from "@/lib/utils";
@@ -155,7 +155,7 @@ export default function HistoryPage() {
   );
 }
 
-function History(props) {
+function History(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

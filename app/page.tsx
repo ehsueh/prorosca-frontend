@@ -23,7 +23,7 @@ export default function Home() {
       setUserState(stateParam);
     } else {
       // In a real app, this would come from an API call or auth state
-      setUserState(mockUserState.state);
+      setUserState(mockUserState.state as UserState);
     }
   }, [stateParam]);
 
