@@ -7,6 +7,7 @@ import { NotSailingView } from "@/components/home/not-sailing-view";
 import { MaroonedView } from "@/components/home/marooned-view";
 import { CrewIncidentView } from "@/components/home/crew-incident-view";
 import { mockUserState } from "@/lib/mock-data";
+import { Home } from "lucide-react";
 
 type UserState = "sailing" | "not-sailing" | "marooned" | "crew-incident";
 
@@ -32,20 +33,8 @@ export default function Home() {
     <div className="p-4">
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            className="h-6 w-6 mr-2 text-blue-600 dark:text-blue-400"
-          >
-            <path
-              d="M3 18h18M3 12h18M3 6h18"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          Prorosca
+          <Home className="h-6 w-6 mr-2 text-blue-600 dark:text-blue-400" />
+          Home
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400">
           Sail Together, Save Together
