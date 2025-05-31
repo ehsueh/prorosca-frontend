@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
-
+//@dev Prorosca is a peer-to-peer lending platform for crewmates to join sails
+//@dev this is a proof of concept version that hasn't been fully tested 
+//@dev (definitely not optimized but since we are on Worldchain where gas is free, we will allow it for now)
+//@dev days have been converted to minutes for testing purposes
 contract Prorosca {
     enum Urgency { Eventually, Soon, Now }
 
     struct Bid {
         address bidder;
-        uint256 amount;
+        uint256 amount;  // This is now the interest rate in basis points (e.g., 1000 = 10%)
         uint256 timestamp;
     }
 
@@ -43,6 +46,7 @@ contract Prorosca {
         mapping(address => bool) hasContributed;
         mapping(uint256 => address) roundWinners;
         mapping(address => uint256) contributions;
+        mapping(address => uint256) winnerInterestRates;  // Interest rate they must pay in future rounds
     }
 
     mapping(uint256 => Sail) public sails;
@@ -90,6 +94,19 @@ contract Prorosca {
 
     modifier onlyActiveCaptain() {
         require(captainReputations[msg.sender].isActive, "Not an active captain");
+        _;
+    }
+
+    modifier onlyCrewmate(uint256 sailId) {
+        Sail storage sail = sails[sailId];
+        bool isCrewmate = false;
+        for (uint256 i = 0; i < sail.crewmates.length; i++) {
+            if (sail.crewmates[i] == msg.sender) {
+                isCrewmate = true;
+                break;
+            }
+        }
+        require(isCrewmate, "Only crewmates can call this");
         _;
     }
 
@@ -149,7 +166,7 @@ contract Prorosca {
         sail.durationInDays = durationInDays;
         sail.isSailing = true;
         sail.startTime = block.timestamp;
-        sail.nextPayoutTime = block.timestamp + (durationInDays * 1 days);
+        sail.nextPayoutTime = block.timestamp + (durationInDays * 1 mins);
         sail.currentRound = 0;
         sail.captain = msg.sender;
 
@@ -168,7 +185,7 @@ contract Prorosca {
         uint256 desiredLoanAmount,
         Urgency urgency
     ) public payable {
-        require(msg.value > 0, "Must commit funds to apply");
+        require(msg.value >= monthlyBudget, "Must commit funds to apply");
         require(applicantToIndex[msg.sender] == 0, "Already applied");
 
         CrewmateApplication memory application = CrewmateApplication({
@@ -192,7 +209,7 @@ contract Prorosca {
         );
     }
 
-    function placeBid(uint256 sailId, uint256 bidAmount) public onlyCaptain(sailId) {
+    function placeBid(uint256 sailId, uint256 interestRate) public payable onlyCrewmate(sailId) {
         Sail storage sail = sails[sailId];
         require(sail.isSailing, "This sail is not active");
         require(
@@ -200,21 +217,30 @@ contract Prorosca {
             "Bidding period has ended"
         );
         require(
-            bidAmount > sail.highestBid.amount,
-            "Bid must be higher than current highest"
+            interestRate > sail.highestBid.amount,
+            "Interest rate must be higher than current highest"
         );
-        require(
-            sail.contributions[msg.sender] >= sail.monthlyPrincipal,
-            "Must contribute monthly principal first"
-        );
+
+        // If they haven't contributed this round, they must send principal + any interest if they've won before
+        if (!sail.hasContributed[msg.sender]) {
+            uint256 requiredAmount = sail.monthlyPrincipal;
+            if (sail.winnerInterestRates[msg.sender] > 0) {
+                requiredAmount += (sail.monthlyPrincipal * sail.winnerInterestRates[msg.sender]) / 10000;
+            }
+            require(msg.value == requiredAmount, "Must contribute principal + interest");
+            sail.contributions[msg.sender] = msg.value;
+            sail.hasContributed[msg.sender] = true;
+        } else {
+            require(msg.value == 0, "Already contributed this round");
+        }
 
         sail.highestBid = Bid({
             bidder: msg.sender,
-            amount: bidAmount,
+            amount: interestRate,
             timestamp: block.timestamp
         });
 
-        emit BidPlaced(sailId, msg.sender, bidAmount);
+        emit BidPlaced(sailId, msg.sender, interestRate);
     }
 
     function completeRound(uint256 sailId) public {
@@ -232,8 +258,9 @@ contract Prorosca {
         address winner = sail.highestBid.bidder;
         uint256 payout = sail.monthlyPrincipal * sail.totalCrewmates;
 
-        // Record winner and reset for next round
+        // Record winner and their interest rate for future rounds
         sail.roundWinners[sail.currentRound] = winner;
+        sail.winnerInterestRates[winner] = sail.highestBid.amount;
         
         // Transfer the pool to the winner
         payable(winner).transfer(payout);
@@ -247,12 +274,12 @@ contract Prorosca {
 
         // Reset for next round
         sail.currentRound++;
-        sail.nextPayoutTime += sail.durationInDays * 1 days;
+        sail.nextPayoutTime += sail.durationInDays * 1 mins;
         sail.highestBid = Bid(address(0), 0, 0);
 
-        // Reset contributions tracking
+        // Reset contributions tracking for next round
         for (uint256 i = 0; i < sail.crewmates.length; i++) {
-            sail.contributions[sail.crewmates[i]] = 0;
+            sail.hasContributed[sail.crewmates[i]] = false;
         }
 
         // Check if all rounds are complete
