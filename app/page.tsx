@@ -94,11 +94,9 @@ function HomeContent() {
   ];
 
   const sendTransaction = async (formData: {
-    contributionAmount: string;
-    contributionCurrency: string;
-    loanTargetAmount: string;
-    loanTargetCurrency: string;
-    urgency: string;
+    monthlyBudget: number;
+    desiredLoanAmount: number;
+    urgency: number;
   }) => {
     const { commandPayload, finalPayload } = await MiniKit.commandsAsync.sendTransaction({
       transaction: [
@@ -106,7 +104,7 @@ function HomeContent() {
           address: CONTRACT_ADDRESS,
           abi: ABI,
           functionName: 'joinSail',
-          args: [formData.contributionAmount, formData.contributionCurrency, formData.loanTargetAmount, formData.loanTargetCurrency, formData.urgency],
+          args: [formData.monthlyBudget, formData.desiredLoanAmount, formData.urgency],
         },
       ],
 
@@ -129,7 +127,7 @@ function HomeContent() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-slate-900 dark:text-blue-100 mb-4">
-            ⛵ Founders Lending 
+            ⛵ Founders Lending
           </h1>
           <p className="text-xl text-slate-700 dark:text-blue-300 max-w-2xl mx-auto">
             Apply to join funding circles and get matched with the perfect crew by our AI captains. Bid for the treasure chest and sail through rounds of funding with your fellow founders.
