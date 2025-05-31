@@ -2,6 +2,8 @@
 pragma solidity ^0.8.28;
 
 contract Prorosca {
+    enum Urgency { Eventually, Soon, Now }
+
     struct Bid {
         address bidder;
         uint256 amount;
@@ -18,9 +20,9 @@ contract Prorosca {
 
     struct CrewmateApplication {
         address applicant;
-        uint256 monthlyPrincipalTarget;
+        uint256 monthlyBudget;
         uint256 desiredLoanAmount;
-        uint256 urgencyLevel; // 1-10, 10 being most urgent
+        Urgency urgency;
         uint256 timestamp;
         bool isMatched;
         uint256 contribution;
@@ -62,9 +64,9 @@ contract Prorosca {
     event CrewmateJoined(uint256 indexed sailId, address indexed crewmate);
     event ApplicationSubmitted(
         address indexed applicant,
-        uint256 monthlyPrincipalTarget,
+        uint256 monthlyBudget,
         uint256 desiredLoanAmount,
-        uint256 urgencyLevel
+        Urgency urgency
     );
     event CrewmateMatched(address indexed applicant, uint256 indexed sailId);
     event BidPlaced(
@@ -161,29 +163,33 @@ contract Prorosca {
         return sailId;
     }
 
-    function joinSail(uint256 sailId) public payable {
-        Sail storage sail = sails[sailId];
-        require(sail.isSailing, "This sail is not active");
-        require(
-            msg.value == sail.monthlyPrincipal,
-            "Must contribute monthly principal"
-        );
-        require(
-            sail.crewmates.length < sail.totalCrewmates,
-            "Crew is already full"
-        );
+    function joinSail(
+        uint256 monthlyBudget,
+        uint256 desiredLoanAmount,
+        Urgency urgency
+    ) public payable {
+        require(msg.value > 0, "Must commit funds to apply");
+        require(applicantToIndex[msg.sender] == 0, "Already applied");
 
-        // Check if already a crewmate
-        for (uint256 i = 0; i < sail.crewmates.length; i++) {
-            require(
-                sail.crewmates[i] != msg.sender,
-                "Already part of the crew"
-            );
-        }
+        CrewmateApplication memory application = CrewmateApplication({
+            applicant: msg.sender,
+            monthlyBudget: monthlyBudget,
+            desiredLoanAmount: desiredLoanAmount,
+            urgency: urgency,
+            timestamp: block.timestamp,
+            isMatched: false,
+            contribution: msg.value
+        });
 
-        sail.crewmates.push(msg.sender);
-        sail.contributions[msg.sender] = msg.value;
-        emit CrewmateJoined(sailId, msg.sender);
+        pendingApplications.push(application);
+        applicantToIndex[msg.sender] = pendingApplications.length;
+
+        emit ApplicationSubmitted(
+            msg.sender,
+            monthlyBudget,
+            desiredLoanAmount,
+            urgency
+        );
     }
 
     function placeBid(uint256 sailId, uint256 bidAmount) public onlyCaptain(sailId) {
@@ -279,37 +285,6 @@ contract Prorosca {
         reputation.abandonedSails++;
         
         emit SailAbandoned(sailId, sail.captain);
-    }
-
-    function applyForSail(
-        uint256 monthlyPrincipalTarget,
-        uint256 desiredLoanAmount,
-        uint256 urgencyLevel
-    ) public payable {
-        require(urgencyLevel >= 1 && urgencyLevel <= 10, "Invalid urgency level");
-        require(msg.value > 0, "Must commit funds to apply");
-        require(applicantToIndex[msg.sender] == 0, "Already applied");
-        require(msg.sender != msg.sender, "Captain cannot apply");
-
-        CrewmateApplication memory application = CrewmateApplication({
-            applicant: msg.sender,
-            monthlyPrincipalTarget: monthlyPrincipalTarget,
-            desiredLoanAmount: desiredLoanAmount,
-            urgencyLevel: urgencyLevel,
-            timestamp: block.timestamp,
-            isMatched: false,
-            contribution: msg.value
-        });
-
-        pendingApplications.push(application);
-        applicantToIndex[msg.sender] = pendingApplications.length;
-
-        emit ApplicationSubmitted(
-            msg.sender,
-            monthlyPrincipalTarget,
-            desiredLoanAmount,
-            urgencyLevel
-        );
     }
 
     function matchCrewmateToSail(
@@ -425,9 +400,9 @@ contract Prorosca {
         view
         returns (
             address applicant,
-            uint256 monthlyPrincipalTarget,
+            uint256 monthlyBudget,
             uint256 desiredLoanAmount,
-            uint256 urgencyLevel,
+            Urgency urgency,
             uint256 timestamp,
             bool isMatched,
             uint256 contribution
@@ -437,9 +412,9 @@ contract Prorosca {
         CrewmateApplication storage app = pendingApplications[index];
         return (
             app.applicant,
-            app.monthlyPrincipalTarget,
+            app.monthlyBudget,
             app.desiredLoanAmount,
-            app.urgencyLevel,
+            app.urgency,
             app.timestamp,
             app.isMatched,
             app.contribution
