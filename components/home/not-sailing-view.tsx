@@ -87,7 +87,7 @@ export function NotSailingView() {
               <div>
                 <h4 className="font-medium mb-1">Join a Crew</h4>
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  We'll match you with other sailors with similar savings goals
+                  We&apos;ll match you with other sailors with similar savings goals
                 </p>
               </div>
             </div>
@@ -184,7 +184,7 @@ export function NotSailingView() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-slate-500 mt-1">
-                  This is approximately the amount you'll receive when you win
+                  This is approximately the amount you&apos;ll receive when you win
                 </p>
               </div>
               

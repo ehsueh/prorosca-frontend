@@ -129,7 +129,7 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <h3 className="font-medium">
-                    Captain's Courage
+                    Captain&apos;s Courage
                     {data.anchorsEarned === 0 && <span className="text-xs ml-2 text-slate-500">Locked</span>}
                   </h3>
                   <p className="text-sm text-slate-500 dark:text-slate-400">

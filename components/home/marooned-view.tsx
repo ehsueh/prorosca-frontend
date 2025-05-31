@@ -21,9 +21,9 @@ export function MaroonedView() {
         <div className="flex items-start">
           <AlertTriangle className="h-10 w-10 mr-3" />
           <div>
-            <h2 className="text-xl font-bold mb-1">You've Been Marooned</h2>
+            <h2 className="text-xl font-bold mb-1">You&apos;ve Been Marooned</h2>
             <p className="text-white/80">
-              Due to missed payments, you've been temporarily blacklisted from joining new circles
+              Due to missed payments, you&apos;ve been temporarily blacklisted from joining new circles
             </p>
           </div>
         </div>

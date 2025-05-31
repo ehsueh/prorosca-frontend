@@ -115,7 +115,7 @@ export function CrewIncidentView() {
                   </li>
                   <li className="flex items-center">
                     <span className="h-1.5 w-1.5 rounded-full bg-red-500 mr-2"></span>
-                    Count as an "Abandoned Sail\" for all
+                    Count as an &quot;Abandoned Sail&quot; for all
                   </li>
                 </ul>
                 <Button 
@@ -154,7 +154,7 @@ export function CrewIncidentView() {
             <div className="mt-4 animate-pulse bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 flex items-center">
               <div className="h-2 w-2 rounded-full bg-blue-500 mr-2"></div>
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                Waiting for captain's response...
+                Waiting for captain&apos;s response...
               </p>
             </div>
           </div>

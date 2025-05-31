@@ -196,7 +196,7 @@ export default function SettingsPage() {
           <div>
             <h3 className="font-medium text-amber-800 dark:text-amber-300 mb-1">Important Notice</h3>
             <p className="text-sm text-amber-700 dark:text-amber-400">
-              Changing risk preferences will only affect future circles you join, not ones you're currently participating in.
+              Changing risk preferences will only affect future circles you join, not ones you&apos;re currently participating in.
             </p>
           </div>
         </div>
