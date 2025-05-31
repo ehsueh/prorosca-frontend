@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { SailingView } from "@/components/home/sailing-view";
 import { NotSailingView } from "@/components/home/not-sailing-view";
@@ -28,7 +28,7 @@ interface SailData {
   captain: string;
 }
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const { isSignedIn } = useAuth();
   // For demo purposes, allow state to be changed via URL parameter
@@ -158,5 +158,15 @@ export default function Home() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-950 flex items-center justify-center">
+      <div className="text-blue-100 text-xl">Loading...</div>
+    </div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
