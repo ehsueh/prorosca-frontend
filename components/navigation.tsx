@@ -5,9 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Home, History, Settings, User } from "lucide-react";
+import { useAuth } from "./providers/AuthProvider";
 
 export default function Navigation() {
   const pathname = usePathname();
+  const { isSignedIn } = useAuth();
+
+  if (!isSignedIn) {
+    return null;
+  }
 
   const tabs = [
     {

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { LowPolyScene } from "../background/LowPolyScene";
+import { useAuth } from "../providers/AuthProvider";
 
 interface Stats {
   totalSails: number;
@@ -11,11 +12,12 @@ interface Stats {
 }
 
 interface LandingPageProps {
-  onConnect: () => void;
   stats: Stats;
 }
 
-export function LandingPage({ onConnect, stats }: LandingPageProps) {
+export function LandingPage({ stats }: LandingPageProps) {
+  const { signInWithWallet } = useAuth();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-900 via-blue-800 to-blue-950 relative">
       {/* Background Scene */}
@@ -64,7 +66,7 @@ export function LandingPage({ onConnect, stats }: LandingPageProps) {
             <Button 
               size="lg" 
               className="bg-blue-500 hover:bg-blue-600 text-base sm:text-lg px-6 py-5 sm:px-8 sm:py-6 shadow-lg transform hover:scale-105 transition-transform"
-              onClick={onConnect}
+              onClick={signInWithWallet}
             >
               🏴‍☠️ Connect Wallet to Join a Crew
             </Button>

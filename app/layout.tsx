@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { TransactionProvider } from '@/components/providers/TransactionProvider';
+import { AuthProvider } from '@/components/providers/AuthProvider';
 import Navigation from '@/components/navigation';
 import Image from 'next/image';
 import { MiniKitProvider } from '@worldcoin/minikit-js/minikit-provider';
@@ -67,22 +68,24 @@ export default function RootLayout({
           appId: process.env.NEXT_PUBLIC_APP_ID,
         }}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <TransactionProvider>
-              <div className="max-w-md mx-auto pb-16 min-h-screen flex flex-col">
-                <header className="p-4 flex justify-center">
-                  <Image
-                    src="/Prorosca_transparent.png"
-                    alt="Prorosca"
-                    width={150}
-                    height={40}
-                    priority
-                    className="h-8 w-auto"
-                  />
-                </header>
-                <main className="flex-1">{children}</main>
-                <Navigation />
-              </div>
-            </TransactionProvider>
+            <AuthProvider>
+              <TransactionProvider>
+                <div className="max-w-md mx-auto pb-16 min-h-screen flex flex-col">
+                  <header className="p-4 flex justify-center">
+                    <Image
+                      src="/Prorosca_transparent.png"
+                      alt="Prorosca"
+                      width={150}
+                      height={40}
+                      priority
+                      className="h-8 w-auto"
+                    />
+                  </header>
+                  <main className="flex-1">{children}</main>
+                  <Navigation />
+                </div>
+              </TransactionProvider>
+            </AuthProvider>
           </ThemeProvider>
         </MiniKitProvider>
       </body>

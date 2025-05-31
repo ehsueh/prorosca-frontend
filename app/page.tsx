@@ -10,6 +10,7 @@ import { mockUserState } from "@/lib/mock-data";
 import { LandingPage } from '@/components/landing/LandingPage';
 import { Sail } from '@/components/Sail';
 import { CreateSail } from '@/components/CreateSail';
+import { useAuth } from '@/components/providers/AuthProvider';
 
 type UserState = "sailing" | "not-sailing" | "marooned" | "crew-incident";
 
@@ -29,11 +30,11 @@ interface SailData {
 
 export default function Home() {
   const searchParams = useSearchParams();
+  const { isSignedIn } = useAuth();
   // For demo purposes, allow state to be changed via URL parameter
   const stateParam = searchParams.get("state") as UserState | null;
   
   const [userState, setUserState] = useState<UserState>("sailing");
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [sails, setSails] = useState<SailData[]>([]);
   const [stats, setStats] = useState({
     totalSails: 0,
@@ -66,11 +67,6 @@ export default function Home() {
 
     fetchStats();
   }, []);
-
-  const handleConnect = async () => {
-    // TODO: Implement actual wallet connection
-    setIsWalletConnected(true);
-  };
 
   const handleCreateSail = (sailData: {
     name: string;
@@ -120,8 +116,8 @@ export default function Home() {
     }));
   };
 
-  if (!isWalletConnected) {
-    return <LandingPage onConnect={handleConnect} stats={stats} />;
+  if (!isSignedIn) {
+    return <LandingPage stats={stats} />;
   }
 
   return (
