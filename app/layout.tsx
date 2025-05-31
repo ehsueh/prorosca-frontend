@@ -4,10 +4,12 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { TransactionProvider } from '@/components/providers/TransactionProvider';
 import { AuthProvider } from '@/components/providers/AuthProvider';
+import { WagmiProvider } from '@/components/providers/WagmiProvider';
 import Navigation from '@/components/navigation';
 import Image from 'next/image';
 import { MiniKitProvider } from '@worldcoin/minikit-js/minikit-provider';
 import { validateEnv } from '@/lib/env';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -51,7 +53,7 @@ export default function RootLayout({
   }
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
@@ -63,31 +65,34 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Prorosca" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>
-      <body className={`${inter.className} bg-background min-h-screen`}>
-        <MiniKitProvider props={{
-          appId: process.env.NEXT_PUBLIC_APP_ID,
-        }}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <AuthProvider>
-              <TransactionProvider>
-                <div className="max-w-md mx-auto pb-16 min-h-screen flex flex-col">
-                  <header className="p-4 flex justify-center">
-                    <Image
-                      src="/Prorosca_transparent.png"
-                      alt="Prorosca"
-                      width={150}
-                      height={40}
-                      priority
-                      className="h-8 w-auto"
-                    />
-                  </header>
-                  <main className="flex-1">{children}</main>
-                  <Navigation />
-                </div>
-              </TransactionProvider>
-            </AuthProvider>
-          </ThemeProvider>
-        </MiniKitProvider>
+      <body className={`${inter.className} bg-background min-h-screen`} suppressHydrationWarning>
+        <WagmiProvider>
+          <MiniKitProvider props={{
+            appId: process.env.NEXT_PUBLIC_APP_ID,
+          }}>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <AuthProvider>
+                <TransactionProvider>
+                  <div className="max-w-md mx-auto pb-16 min-h-screen flex flex-col">
+                    <header className="p-4 flex justify-center">
+                      <Image
+                        src="/Prorosca_transparent.png"
+                        alt="Prorosca"
+                        width={150}
+                        height={40}
+                        priority
+                        className="h-8 w-auto"
+                      />
+                    </header>
+                    <main className="flex-1">{children}</main>
+                    <Navigation />
+                  </div>
+                  <Toaster />
+                </TransactionProvider>
+              </AuthProvider>
+            </ThemeProvider>
+          </MiniKitProvider>
+        </WagmiProvider>
       </body>
     </html>
   );
