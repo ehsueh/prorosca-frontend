@@ -45,7 +45,6 @@ export const useWorldTransaction = () => {
       app_id: process.env.NEXT_PUBLIC_WORLD_APP_ID || '',
     },
     transactionId: state.transactionId || '',
-    enabled: !!state.transactionId,
   });
 
   const sendTransaction = useCallback(async (transaction: LendingTransaction) => {
