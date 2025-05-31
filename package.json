@@ -9,6 +9,10 @@
     "lint": "next lint",
     "generate-icons": "node scripts/generate-icons.js"
   },
+  "engines": {
+    "node": "18.x",
+    "npm": "9.x"
+  },
   "overrides": {
     "@blockscout/app-sdk": {
       "react": "^18.2.0",

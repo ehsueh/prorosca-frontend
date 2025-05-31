@@ -14,7 +14,6 @@
 # These must be set in the Netlify UI (Site settings > Environment variables)
 #
 # NEXT_PUBLIC_APP_ID                     (Required) Your World App ID from the World Developer Portal
-# NEXT_PUBLIC_LENDING_CONTRACT_ADDRESS   (Required) Your deployed lending contract address
 #
 # To set these variables:
 # 1. Go to your Netlify site dashboard
