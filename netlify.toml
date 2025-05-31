@@ -8,16 +8,18 @@
   NPM_VERSION = "9"
   NEXT_TELEMETRY_DISABLED = "1"
 
-# World App environment variables should be set in Netlify UI:
-# Site settings > Environment variables > Add a variable
+# Required Environment Variables
+# These must be set in the Netlify UI (Site settings > Environment variables)
 #
-# Required variables:
-# - NEXT_PUBLIC_WORLD_APP_ID         (from World Developer Portal)
-# - NEXT_PUBLIC_LENDING_CONTRACT_ADDRESS
-# - NEXT_PUBLIC_WORLD_CHAIN_RPC_URL  (default: https://rpc.world.org)
+# NEXT_PUBLIC_WORLD_APP_ID                 (Required) Your World App ID from the World Developer Portal
+# NEXT_PUBLIC_LENDING_CONTRACT_ADDRESS     (Required) Your deployed lending contract address
+# NEXT_PUBLIC_WORLD_CHAIN_RPC_URL         (Required) World Chain RPC URL (default: https://rpc.world.org)
 #
-# DO NOT add sensitive values here in netlify.toml
-# Use the Netlify UI instead: https://app.netlify.com/sites/YOUR_SITE/settings/env
+# To set these variables:
+# 1. Go to your Netlify site dashboard
+# 2. Navigate to Site settings > Environment variables
+# 3. Add each variable with its corresponding value
+# 4. Trigger a new deployment
 
 # Needed when using static export
 [functions]

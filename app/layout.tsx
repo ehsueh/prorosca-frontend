@@ -6,8 +6,12 @@ import { TransactionProvider } from '@/components/providers/TransactionProvider'
 import Navigation from '@/components/navigation';
 import Image from 'next/image';
 import { MiniKitProvider } from '@worldcoin/minikit-js/minikit-provider';
+import { validateEnv } from '@/lib/env';
 
 const inter = Inter({ subsets: ['latin'] });
+
+// Validate environment variables
+validateEnv();
 
 export const metadata: Metadata = {
   title: 'Prorosca - Set Sail with Savings',
