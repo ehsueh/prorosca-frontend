@@ -209,6 +209,31 @@ contract Prorosca {
         );
     }
 
+    function hasWonBefore(uint256 sailId, address crewmate) public view returns (bool) {
+        Sail storage sail = sails[sailId];
+        for (uint256 i = 0; i < sail.currentRound; i++) {
+            if (sail.roundWinners[i] == crewmate) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function makePayment(uint256 sailId) public payable onlyCrewmate(sailId) {
+        Sail storage sail = sails[sailId];
+        require(sail.isSailing, "This sail is not active");
+        require(!sail.hasContributed[msg.sender], "Already contributed this round");
+        
+        uint256 requiredAmount = sail.monthlyPrincipal;
+        if (sail.winnerInterestRates[msg.sender] > 0) {
+            requiredAmount += (sail.monthlyPrincipal * sail.winnerInterestRates[msg.sender]) / 10000;
+        }
+        require(msg.value == requiredAmount, "Must contribute exact principal + interest");
+        
+        sail.contributions[msg.sender] = msg.value;
+        sail.hasContributed[msg.sender] = true;
+    }
+
     function placeBid(uint256 sailId, uint256 interestRate) public payable onlyCrewmate(sailId) {
         Sail storage sail = sails[sailId];
         require(sail.isSailing, "This sail is not active");
@@ -220,14 +245,11 @@ contract Prorosca {
             interestRate > sail.highestBid.amount,
             "Interest rate must be higher than current highest"
         );
+        require(!hasWonBefore(sailId, msg.sender), "Previous winners cannot bid again");
 
-        // If they haven't contributed this round, they must send principal + any interest if they've won before
+        // If they haven't contributed this round, they must send principal
         if (!sail.hasContributed[msg.sender]) {
-            uint256 requiredAmount = sail.monthlyPrincipal;
-            if (sail.winnerInterestRates[msg.sender] > 0) {
-                requiredAmount += (sail.monthlyPrincipal * sail.winnerInterestRates[msg.sender]) / 10000;
-            }
-            require(msg.value == requiredAmount, "Must contribute principal + interest");
+            require(msg.value == sail.monthlyPrincipal, "Must contribute monthly principal");
             sail.contributions[msg.sender] = msg.value;
             sail.hasContributed[msg.sender] = true;
         } else {
