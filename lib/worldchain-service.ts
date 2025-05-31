@@ -1,5 +1,6 @@
 import { MiniKit } from '@worldcoin/minikit-js';
 import { WORLD_CHAIN_ID } from './worldchain';
+import { ABI, CONTRACT_ADDRESS } from '../contracts/prorosca/abi';
 
 export interface LendingTransaction {
   amount: string;
@@ -8,19 +9,7 @@ export interface LendingTransaction {
 }
 
 // ABI for the lending contract
-const LENDING_ABI = [
-  {
-    inputs: [
-      { name: 'amount', type: 'uint256' },
-      { name: 'recipient', type: 'address' },
-      { name: 'deadline', type: 'uint256' }
-    ],
-    name: 'lend',
-    outputs: [],
-    stateMutability: 'payable',
-    type: 'function'
-  }
-];
+const LENDING_ABI = ABI;
 
 export class WorldChainService {
   static async sendTransaction(transaction: LendingTransaction) {
@@ -32,7 +21,7 @@ export class WorldChainService {
       // Send transaction through World App
       const { commandPayload, finalPayload } = await MiniKit.commandsAsync.sendTransaction({
         transaction: [{
-          address: process.env.NEXT_PUBLIC_LENDING_CONTRACT_ADDRESS as string,
+          address: CONTRACT_ADDRESS as string,
           abi: LENDING_ABI,
           functionName: 'lend',
           args: [
@@ -65,7 +54,7 @@ export class WorldChainService {
         `https://developer.worldcoin.org/api/v2/minikit/transaction/${transactionId}?app_id=${process.env.NEXT_PUBLIC_WORLD_APP_ID}&type=transaction`,
         { method: 'GET' }
       );
-      
+
       const data = await response.json();
       return data.transactionStatus;
     } catch (error) {
