@@ -4,18 +4,26 @@ import { Ship, Timer, Users, Coins, CheckCircle, XCircle } from 'lucide-react';
 import { format } from 'date-fns';
 
 export function HistoryView() {
-  const getStatusIcon = (status: 'completed' | 'abandoned') => {
-    if (status === 'completed') {
-      return <CheckCircle className="h-5 w-5 text-green-500" />;
+  const getStatusIcon = (status: 'active' | 'completed' | 'abandoned') => {
+    switch (status) {
+      case 'completed':
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case 'active':
+        return <Ship className="h-5 w-5 text-blue-500" />;
+      case 'abandoned':
+        return <XCircle className="h-5 w-5 text-red-500" />;
     }
-    return <XCircle className="h-5 w-5 text-red-500" />;
   };
 
-  const getStatusClass = (status: 'completed' | 'abandoned') => {
-    if (status === 'completed') {
-      return 'bg-green-500/10 border-green-500/20';
+  const getStatusClass = (status: "active" | "completed" | "abandoned") => {
+    switch (status) {
+      case "active":
+        return "border-blue-500/50";
+      case "completed":
+        return "border-emerald-500/50";
+      case "abandoned":
+        return "border-amber-500/50";
     }
-    return 'bg-red-500/10 border-red-500/20';
   };
 
   return (
