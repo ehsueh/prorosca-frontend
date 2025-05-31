@@ -8,21 +8,62 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TransactionStatusMonitor } from "@/components/TransactionStatusMonitor";
 
 export function SailingView() {
   const [bidPercentage, setBidPercentage] = useState<number>(5);
+  const [currentTxHash, setCurrentTxHash] = useState<string | undefined>();
   const data = mockSailingData;
 
   const progressPercentage = ((data.currentRound - 1) / data.totalRounds) * 100;
 
-  const handleBidSubmit = (e: React.FormEvent) => {
+  const handleBidSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`Bid submitted: ${bidPercentage}%`);
-    // In a real app, this would submit to an API
+    try {
+      // In a real app, this would submit to an API and get a transaction hash
+      // For demo, we'll simulate a transaction hash
+      const mockTxHash = "0x123..."; // This would come from your actual transaction
+      setCurrentTxHash(mockTxHash);
+    } catch (error) {
+      console.error("Failed to submit bid:", error);
+      alert("Failed to submit bid. Please try again.");
+    }
+  };
+
+  const handlePayment = async () => {
+    try {
+      // In a real app, this would initiate a payment transaction
+      // For demo, we'll simulate a transaction hash
+      const mockTxHash = "0x456..."; // This would come from your actual transaction
+      setCurrentTxHash(mockTxHash);
+    } catch (error) {
+      console.error("Payment failed:", error);
+      alert("Payment failed. Please try again.");
+    }
+  };
+
+  const handleTransactionSuccess = () => {
+    setCurrentTxHash(undefined);
+    // Refresh data or update UI as needed
+    alert("Transaction completed successfully!");
+  };
+
+  const handleTransactionError = (error: any) => {
+    setCurrentTxHash(undefined);
+    console.error("Transaction failed:", error);
+    alert("Transaction failed. Please try again.");
   };
 
   return (
     <div className="space-y-6">
+      {currentTxHash && (
+        <TransactionStatusMonitor
+          txHash={currentTxHash}
+          onSuccess={handleTransactionSuccess}
+          onError={handleTransactionError}
+        />
+      )}
+
       <div className="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-4 text-white shadow-lg">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold flex items-center">
@@ -77,13 +118,18 @@ export function SailingView() {
                 value={bidPercentage}
                 onChange={(e) => setBidPercentage(parseFloat(e.target.value))}
                 className="flex-1"
+                disabled={!!currentTxHash}
               />
               <span className="text-lg font-medium">%</span>
             </div>
             <div className="mt-2 text-xs text-slate-500">
               Higher bids have a better chance of winning, but it also means you will be paying more interest!
             </div>
-            <Button className="w-full mt-3" type="submit">
+            <Button 
+              className="w-full mt-3" 
+              type="submit"
+              disabled={!!currentTxHash}
+            >
               Submit Bid
             </Button>
           </form>
@@ -113,7 +159,12 @@ export function SailingView() {
               Due {formatDate(data.nextPayment.dueDate)}
             </p>
           </div>
-          <Button>Pay Now</Button>
+          <Button 
+            onClick={handlePayment}
+            disabled={!!currentTxHash}
+          >
+            Pay Now
+          </Button>
         </div>
       </Card>
 
