@@ -23,15 +23,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  if (!process.env.NEXT_PUBLIC_WORLD_APP_ID) {
-    throw new Error('NEXT_PUBLIC_WORLD_APP_ID environment variable is not set');
+  if (!process.env.NEXT_PUBLIC_APP_ID) {
+    throw new Error('NEXT_PUBLIC_APP_ID environment variable is not set');
   }
 
   return (
     <html lang="en">
       <body className={`${inter.className} bg-background min-h-screen`}>
         <MiniKitProvider props={{
-          appId: process.env.NEXT_PUBLIC_WORLD_APP_ID,
+          appId: process.env.NEXT_PUBLIC_APP_ID,
         }}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <TransactionProvider>
