@@ -76,7 +76,7 @@ export default function RootLayout({
                   <div className="max-w-md mx-auto pb-16 min-h-screen flex flex-col">
                     <header className="p-4 flex justify-center">
                       <Image
-                        src="/Prorosca_transparent.png"
+                        src="/prorosca_transparent.png"
                         alt="Prorosca"
                         width={150}
                         height={40}
