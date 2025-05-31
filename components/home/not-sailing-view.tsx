@@ -322,14 +322,14 @@ export function NotSailingView() {
                   </div>
                 </div>
                 <p className="text-xs text-slate-500 mt-1">
-                  Higher bids have a better chance of winning&apos; but it also means you will be paying more interest!
+                  Higher bids have a better chance of winning, but it also means you will be paying more interest!
                 </p>
               </div>
               
               <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">If you win with this bid:</h4>
                 <div className="flex justify-between text-sm">
-                  <span>You'll receive</span>
+                  <span>You&apos;ll receive</span>
                   <span className="font-medium">
                     ${(parseInt(formData.budget) * 5 * (1 - parseFloat(initialBid) / 100)).toFixed(2)}
                   </span>
