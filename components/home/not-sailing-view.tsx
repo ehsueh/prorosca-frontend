@@ -8,10 +8,21 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 type OnboardingStep = "intro" | "form" | "matching" | "bid";
 
-export function NotSailingView() {
+interface NotSailingViewProps {
+  onJoinSail: (formData: {
+    contributionAmount: string;
+    contributionCurrency: string;
+    loanTargetAmount: string;
+    loanTargetCurrency: string;
+    urgency: string;
+  }) => Promise<void>;
+}
+
+export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
   const [step, setStep] = useState<OnboardingStep>("intro");
   const [formData, setFormData] = useState({
     budget: "200",
@@ -40,19 +51,32 @@ export function NotSailingView() {
     setFormData((prev) => ({ ...prev, urgency: value }));
   };
 
-  const handleSubmitForm = (e: React.FormEvent) => {
+  const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     setStep("matching");
     
-    // Simulate matching delay for demo purposes
-    setTimeout(() => {
-      setStep("bid");
-    }, 2000);
+    try {
+      await onJoinSail({
+        contributionAmount: formData.budget,
+        contributionCurrency: formData.currency,
+        loanTargetAmount: formData.loanTarget,
+        loanTargetCurrency: formData.currency,
+        urgency: formData.urgency,
+      });
+      
+      // Simulate matching delay for demo purposes
+      setTimeout(() => {
+        setStep("bid");
+      }, 2000);
+    } catch (error) {
+      toast.error("Failed to join circle. Please try again.");
+      setStep("form");
+    }
   };
 
   const handleSubmitBid = (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`Joining circle with initial bid: ${initialBid}%`);
+    toast.success(`Joining circle with initial bid: ${initialBid}%`);
     // In a real app, this would submit to an API
   };
 
@@ -87,7 +111,7 @@ export function NotSailingView() {
               <div>
                 <h4 className="font-medium mb-1">Join a Crew</h4>
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  We&apos;ll match you with other sailors with similar savings goals
+                  We'll match you with other sailors with similar savings goals
                 </p>
               </div>
             </div>
@@ -184,7 +208,7 @@ export function NotSailingView() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-slate-500 mt-1">
-                  This is approximately the amount you&apos;ll receive when you win
+                  This is approximately the amount you'll receive when you win
                 </p>
               </div>
               
@@ -269,7 +293,7 @@ export function NotSailingView() {
         <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-6"></div>
         <h2 className="text-xl font-bold mb-2">Finding Your Crew</h2>
         <p className="text-slate-500 dark:text-slate-400 text-center max-w-xs">
-          We&apos;re matching you with sailors who share similar saving goals and timeframes...
+          We're matching you with sailors who share similar saving goals and timeframes...
         </p>
       </div>
     );
@@ -282,7 +306,7 @@ export function NotSailingView() {
         <div className="bg-gradient-to-br from-emerald-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
           <h2 className="text-xl font-bold mb-2">Crew Found!</h2>
           <p className="text-white/80 mb-4">
-            You&apos;ve been matched with a crew of 5 sailors
+            You've been matched with a crew of 5 sailors
           </p>
           <div className="bg-white/10 rounded-lg p-3">
             <div className="flex justify-between mb-2">
@@ -329,7 +353,7 @@ export function NotSailingView() {
               <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">If you win with this bid:</h4>
                 <div className="flex justify-between text-sm">
-                  <span>You&apos;ll receive</span>
+                  <span>You'll receive</span>
                   <span className="font-medium">
                     ${(parseInt(formData.budget) * 5 * (1 - parseFloat(initialBid) / 100)).toFixed(2)}
                   </span>
