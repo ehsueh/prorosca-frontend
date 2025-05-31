@@ -3,7 +3,6 @@ pragma solidity ^0.8.28;
 //@dev Prorosca is a peer-to-peer lending platform for crewmates to join sails
 //@dev this is a proof of concept version that hasn't been fully tested 
 //@dev (definitely not optimized but since we are on Worldchain where gas is free, we will allow it for now)
-//@dev days have been converted to minutes for testing purposes
 contract Prorosca {
     enum Urgency { Eventually, Soon, Now }
 
@@ -166,7 +165,7 @@ contract Prorosca {
         sail.durationInDays = durationInDays;
         sail.isSailing = true;
         sail.startTime = block.timestamp;
-        sail.nextPayoutTime = block.timestamp + (durationInDays * 1 mins);
+        sail.nextPayoutTime = block.timestamp + (durationInDays * 1 days);
         sail.currentRound = 0;
         sail.captain = msg.sender;
 
@@ -296,7 +295,7 @@ contract Prorosca {
 
         // Reset for next round
         sail.currentRound++;
-        sail.nextPayoutTime += sail.durationInDays * 1 mins;
+        sail.nextPayoutTime += sail.durationInDays * 1 days;
         sail.highestBid = Bid(address(0), 0, 0);
 
         // Reset contributions tracking for next round

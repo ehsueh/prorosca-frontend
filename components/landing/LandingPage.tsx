@@ -68,7 +68,7 @@ export function LandingPage({ stats }: LandingPageProps) {
               className="bg-blue-500 hover:bg-blue-600 text-base sm:text-lg px-6 py-5 sm:px-8 sm:py-6 shadow-lg transform hover:scale-105 transition-transform"
               onClick={signInWithWallet}
             >
-              🏴‍☠️ Connect Wallet to Join a Crew
+              Connect Wallet to Join a Crew
             </Button>
           </motion.div>
         </div>

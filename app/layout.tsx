@@ -75,12 +75,9 @@ export default function RootLayout({
                 <TransactionProvider>
                   <div className="max-w-md mx-auto pb-16 min-h-screen flex flex-col">
                     <header className="p-4 flex justify-center">
-                      <Image
+                      <img
                         src="/prorosca_transparent.png"
                         alt="Prorosca"
-                        width={150}
-                        height={40}
-                        priority
                         className="h-8 w-auto"
                       />
                     </header>
