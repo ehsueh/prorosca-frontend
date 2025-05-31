@@ -7,7 +7,8 @@ import { AuthProvider } from '@/components/providers/AuthProvider';
 import { WagmiProvider } from '@/components/providers/WagmiProvider';
 import Navigation from '@/components/navigation';
 import Image from 'next/image';
-import { MiniKitProvider } from '@worldcoin/minikit-js/minikit-provider';
+// import { MiniKitProvider } from '@worldcoin/minikit-js/minikit-provider';
+import MiniKitProvider from '@/components/minikit-provider';
 import { validateEnv } from '@/lib/env';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -67,9 +68,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} bg-background min-h-screen`} suppressHydrationWarning>
         <WagmiProvider>
-          <MiniKitProvider props={{
-            appId: process.env.NEXT_PUBLIC_APP_ID,
-          }}>
+          <MiniKitProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               <AuthProvider>
                 <TransactionProvider>
