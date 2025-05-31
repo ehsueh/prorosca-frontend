@@ -1,9 +1,12 @@
 # Compiler files
-cache/
-out/
-artifacts/
-forge-cache/
-lib/
+**/cache/
+**/out/
+**/artifacts/
+**/forge-cache/
+
+# Dependencies
+**/lib/
+**/node_modules/
 
 # Ignores development broadcast logs
 !/broadcast
@@ -15,31 +18,29 @@ docs/
 
 # Dotenv file
 .env
-
-# Node modules
-node_modules/
+**/.env
 
 # Coverage
-coverage/
-coverage.json
+**/coverage/
+**/coverage.json
 
 # Hardhat files
-cache_hardhat/
-artifacts/
+**/cache_hardhat/
+**/artifacts/
 
 # Foundry
-cache/
-out/
-broadcast/
+**/cache/
+**/out/
+**/broadcast/
 
 # Debug files
-*.log
+**/*.log
 
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
+**/*.swp
+**/*.swo
 
 # OS
 .DS_Store
