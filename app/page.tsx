@@ -64,29 +64,22 @@ function HomeContent() {
 
   const options = [
     {
-      title: "Create Circle",
-      description: "Start a new funding circle and invite others to join",
-      icon: <PlusCircle className="h-8 w-8 text-slate-900 dark:text-blue-400" />,
-      onClick: () => router.push("/create"),
-      color: "from-blue-500/20 to-blue-600/20"
-    },
-    {
-      title: "Join Circle",
-      description: "Browse and join existing funding circles",
+      title: "Apply for Funding",
+      description: "Submit your application to join a funding circle",
       icon: <Users className="h-8 w-8 text-slate-900 dark:text-green-400" />,
       onClick: () => router.push("/join"),
       color: "from-green-500/20 to-green-600/20"
     },
     {
-      title: "Active Circles",
+      title: "Active Voyages",
       description: "View and manage your active funding circles",
       icon: <Ship className="h-8 w-8 text-slate-900 dark:text-purple-400" />,
-      onClick: () => router.push("/active"),
+      onClick: () => setUserState("sailing"),
       color: "from-purple-500/20 to-purple-600/20"
     },
     {
-      title: "History",
-      description: "View your past funding circles and transactions",
+      title: "Sailing History",
+      description: "View your past voyages and transactions",
       icon: <History className="h-8 w-8 text-slate-900 dark:text-orange-400" />,
       onClick: () => router.push("/history"),
       color: "from-orange-500/20 to-orange-600/20"
@@ -125,14 +118,14 @@ function HomeContent() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-950">
+    <main className="min-h-screen bg-gradient-to-b from-slate-100 to-slate-200 dark:from-blue-900 dark:to-blue-950">
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-slate-900 dark:text-blue-100 mb-4">
             ProRosca Funding Circles ⛵
           </h1>
           <p className="text-xl text-slate-700 dark:text-blue-300 max-w-2xl mx-auto">
-            Join funding circles, bid for the treasure chest, and sail through rounds of funding with your fellow founders.
+            Apply to join funding circles and get matched with the perfect crew by our AI captains. Bid for the treasure chest and sail through rounds of funding with your fellow founders.
           </p>
         </div>
 
@@ -165,7 +158,7 @@ function HomeContent() {
 
         {/* Navigation Options */}
         <div className="mt-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {options.map((option, index) => (
               <Card
                 key={index}
