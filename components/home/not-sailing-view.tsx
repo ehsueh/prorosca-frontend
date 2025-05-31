@@ -269,7 +269,7 @@ export function NotSailingView() {
         <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-6"></div>
         <h2 className="text-xl font-bold mb-2">Finding Your Crew</h2>
         <p className="text-slate-500 dark:text-slate-400 text-center max-w-xs">
-          We're matching you with sailors who share similar saving goals and timeframes...
+          We&apos;re matching you with sailors who share similar saving goals and timeframes...
         </p>
       </div>
     );
@@ -282,7 +282,7 @@ export function NotSailingView() {
         <div className="bg-gradient-to-br from-emerald-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
           <h2 className="text-xl font-bold mb-2">Crew Found!</h2>
           <p className="text-white/80 mb-4">
-            You've been matched with a crew of 5 sailors
+            You&apos;ve been matched with a crew of 5 sailors
           </p>
           <div className="bg-white/10 rounded-lg p-3">
             <div className="flex justify-between mb-2">

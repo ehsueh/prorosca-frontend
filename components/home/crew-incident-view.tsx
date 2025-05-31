@@ -64,7 +64,7 @@ export function CrewIncidentView() {
 
         {isCaptain ? (
           <div>
-            <h3 className="text-lg font-medium mb-3">Captain's Decision Required</h3>
+            <h3 className="text-lg font-medium mb-3">Captain&apos;s Decision Required</h3>
             <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
               As the captain, you must decide how to handle this incident:
             </p>
@@ -76,12 +76,12 @@ export function CrewIncidentView() {
                   Cover the Loss
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
-                  Pay {formatCurrency(data.defaultAmount)} to keep the circle running. You'll earn:
+                  Pay {formatCurrency(data.defaultAmount)} to keep the circle running. You&apos;ll earn:
                 </p>
                 <ul className="text-sm space-y-1 mb-3">
                   <li className="flex items-center">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2"></span>
-                    Captain's Bounty: {formatCurrency(data.captainBounty)}
+                    Captain&apos;s Bounty: {formatCurrency(data.captainBounty)}
                   </li>
                   <li className="flex items-center">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2"></span>
@@ -130,7 +130,7 @@ export function CrewIncidentView() {
           </div>
         ) : (
           <div>
-            <h3 className="text-lg font-medium mb-3">Awaiting Captain's Decision</h3>
+            <h3 className="text-lg font-medium mb-3">Awaiting Captain&apos;s Decision</h3>
             <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
               The captain is reviewing this incident and will decide whether to:
             </p>
