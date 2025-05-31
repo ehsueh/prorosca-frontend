@@ -99,7 +99,7 @@ export default function SettingsPage() {
                 </SelectContent>
               </Select>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Influences the types of circles you'll be matched with
+                Influences the types of circles you&apos;ll be matched with
               </p>
             </div>
           </div>
