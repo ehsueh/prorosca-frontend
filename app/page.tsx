@@ -13,56 +13,10 @@ import { SailingView } from "@/components/home/sailing-view";
 import { NotSailingView } from "@/components/home/not-sailing-view";
 import { MaroonedView } from "@/components/home/marooned-view";
 import { CrewIncidentView } from "@/components/home/crew-incident-view";
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { worldchain } from '@/lib/chains';
 import { toast } from 'sonner';
-
-// ABI for the joinSail function
-const SailABI = [
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "contributionAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "contributionCurrency",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "loanTargetAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "loanTargetCurrency",
-        "type": "address"
-      },
-      {
-        "internalType": "uint8",
-        "name": "urgency",
-        "type": "uint8"
-      }
-    ],
-    "name": "joinSail",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-] as const;
-
-// Contract address - replace with your actual contract address
-const SAIL_CONTRACT_ADDRESS = "0x..."; // Replace with your contract address
-
-// Currency addresses - replace with actual token addresses
-const CURRENCY_ADDRESSES = {
-  USDC: "0x...", // Replace with USDC address
-  USDT: "0x...", // Replace with USDT address
-  DAI: "0x..."  // Replace with DAI address
-} as const;
+import { MiniKit } from "@worldcoin/minikit-js";
+import { ABI, CONTRACT_ADDRESS } from '@/lib/abi'
 
 type UserState = "sailing" | "not-sailing" | "marooned" | "crew-incident";
 
@@ -77,11 +31,6 @@ function HomeContent() {
     totalFunds: 0,
     activeSails: 0,
     successfulVoyages: 0
-  });
-
-  const { writeContract, data: hash } = useWriteContract();
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
-    hash,
   });
 
   useEffect(() => {
@@ -144,50 +93,36 @@ function HomeContent() {
     }
   ];
 
-  const handleJoinSail = async (formData: {
+  const sendTransaction = async (formData: {
     contributionAmount: string;
     contributionCurrency: string;
     loanTargetAmount: string;
     loanTargetCurrency: string;
     urgency: string;
   }) => {
-    try {
-      // Convert urgency string to number (0: now, 1: sooner-than-later, 2: dont-care)
-      const urgencyMap = {
-        'now': 0,
-        'sooner-than-later': 1,
-        'dont-care': 2
-      };
-      
-      const urgencyValue = urgencyMap[formData.urgency as keyof typeof urgencyMap] || 1;
+    const { commandPayload, finalPayload } = await MiniKit.commandsAsync.sendTransaction({
+      transaction: [
+        {
+          address: CONTRACT_ADDRESS,
+          abi: ABI,
+          functionName: 'joinSail',
+          args: [formData.contributionAmount, formData.contributionCurrency, formData.loanTargetAmount, formData.loanTargetCurrency, formData.urgency],
+        },
+      ],
 
-      // Convert amounts to wei (18 decimals)
-      const contributionAmount = BigInt(parseFloat(formData.contributionAmount) * 1e18);
-      const loanTargetAmount = BigInt(parseFloat(formData.loanTargetAmount) * 1e18);
+    })
 
-      writeContract({
-        address: SAIL_CONTRACT_ADDRESS as `0x${string}`,
-        abi: SailABI,
-        functionName: 'joinSail',
-        args: [
-          contributionAmount,
-          CURRENCY_ADDRESSES[formData.contributionCurrency as keyof typeof CURRENCY_ADDRESSES] as `0x${string}`,
-          loanTargetAmount,
-          CURRENCY_ADDRESSES[formData.loanTargetCurrency as keyof typeof CURRENCY_ADDRESSES] as `0x${string}`,
-          urgencyValue
-        ],
-      });
-
-      if (isConfirmed) {
-        toast.success('Transaction confirmed');
-        // Update UI or redirect as needed
-      }
-
-    } catch (error) {
-      console.error('Failed to join sail:', error);
-      toast.error('Failed to join sail. Please try again.');
+    if (finalPayload.status === 'success') {
+      console.log(
+        'Transaction submitted, waiting for confirmation:',
+        finalPayload.transaction_id,
+      );
+      // setTransactionId(finalPayload.transaction_id);
+    } else {
+      console.error('Transaction submission failed:', finalPayload);
+      // setButtonState('failed');
     }
-  };
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-950">
@@ -209,11 +144,10 @@ function HomeContent() {
               <button
                 key={state}
                 onClick={() => setUserState(state as UserState)}
-                className={`px-3 py-1 rounded-full ${
-                  userState === state
-                    ? "bg-blue-600 text-white"
-                    : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200"
-                }`}
+                className={`px-3 py-1 rounded-full ${userState === state
+                  ? "bg-blue-600 text-white"
+                  : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200"
+                  }`}
               >
                 {state}
               </button>
@@ -224,7 +158,7 @@ function HomeContent() {
         {/* State-based Views */}
         <div className="max-w-4xl mx-auto">
           {userState === "sailing" && <SailingView />}
-          {userState === "not-sailing" && <NotSailingView onJoinSail={handleJoinSail} />}
+          {userState === "not-sailing" && <NotSailingView onJoinSail={sendTransaction} />}
           {userState === "marooned" && <MaroonedView />}
           {userState === "crew-incident" && <CrewIncidentView />}
         </div>
@@ -233,7 +167,7 @@ function HomeContent() {
         <div className="mt-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {options.map((option, index) => (
-              <Card 
+              <Card
                 key={index}
                 className={`bg-gradient-to-br ${option.color} border-2 border-blue-500/20 hover:border-blue-500/40 transition-all cursor-pointer`}
                 onClick={option.onClick}
