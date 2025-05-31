@@ -8,6 +8,17 @@
   NPM_VERSION = "9"
   NEXT_TELEMETRY_DISABLED = "1"
 
+# World App environment variables should be set in Netlify UI:
+# Site settings > Environment variables > Add a variable
+#
+# Required variables:
+# - NEXT_PUBLIC_WORLD_APP_ID         (from World Developer Portal)
+# - NEXT_PUBLIC_LENDING_CONTRACT_ADDRESS
+# - NEXT_PUBLIC_WORLD_CHAIN_RPC_URL  (default: https://rpc.world.org)
+#
+# DO NOT add sensitive values here in netlify.toml
+# Use the Netlify UI instead: https://app.netlify.com/sites/YOUR_SITE/settings/env
+
 # Needed when using static export
 [functions]
   included_files = ["!node_modules/sharp/**/*"]

@@ -24,8 +24,10 @@ export const getWorldChainConfig = () => {
 export const isWorldAppAuthenticated = async () => {
   if (!isWorldAppEnvironment()) return false;
   try {
-    const auth = await MiniKit.walletAuth();
-    return !!auth;
+    const { finalPayload } = await MiniKit.commandsAsync.walletAuth({
+      nonce: Date.now().toString(),
+    });
+    return finalPayload.status === 'success';
   } catch {
     return false;
   }
@@ -35,8 +37,10 @@ export const isWorldAppAuthenticated = async () => {
 export const getWorldAppAddress = async () => {
   if (!isWorldAppEnvironment()) return null;
   try {
-    const auth = await MiniKit.walletAuth();
-    return auth?.address || null;
+    const { finalPayload } = await MiniKit.commandsAsync.walletAuth({
+      nonce: Date.now().toString(),
+    });
+    return finalPayload.status === 'success' ? finalPayload.address : null;
   } catch {
     return null;
   }
