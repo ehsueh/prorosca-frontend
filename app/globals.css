@@ -79,3 +79,56 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Wave Animation */
+.wave-bg {
+  background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.1));
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.wave-bg::before,
+.wave-bg::after {
+  content: '';
+  position: absolute;
+  width: 300%;
+  height: 300%;
+  top: -150%;
+  left: -150%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 80%);
+  animation: rotate 12s linear infinite;
+  z-index: -1;
+}
+
+.wave-bg::after {
+  animation: rotate 15s linear infinite reverse;
+  opacity: 0.5;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(30, 58, 138, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.3);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.5);
+}

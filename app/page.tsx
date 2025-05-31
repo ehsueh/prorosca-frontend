@@ -7,8 +7,25 @@ import { NotSailingView } from "@/components/home/not-sailing-view";
 import { MaroonedView } from "@/components/home/marooned-view";
 import { CrewIncidentView } from "@/components/home/crew-incident-view";
 import { mockUserState } from "@/lib/mock-data";
+import { LandingPage } from '@/components/landing/LandingPage';
+import { Sail } from '@/components/Sail';
+import { CreateSail } from '@/components/CreateSail';
 
 type UserState = "sailing" | "not-sailing" | "marooned" | "crew-incident";
+
+interface SailData {
+  id: number;
+  name: string;
+  monthlyPrincipal: number;
+  crewmatesCount: number;
+  currentRound: number;
+  highestBid: number;
+  topBidder: string;
+  isSailing: boolean;
+  startTime: Date;
+  nextPayoutTime: Date;
+  captain: string;
+}
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -16,7 +33,15 @@ export default function Home() {
   const stateParam = searchParams.get("state") as UserState | null;
   
   const [userState, setUserState] = useState<UserState>("sailing");
-  
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [sails, setSails] = useState<SailData[]>([]);
+  const [stats, setStats] = useState({
+    totalSails: 0,
+    totalFunds: 0,
+    activeSails: 0,
+    successfulVoyages: 0
+  });
+
   useEffect(() => {
     // For demo/testing purposes: Get state from URL or mock data
     if (stateParam && ["sailing", "not-sailing", "marooned", "crew-incident"].includes(stateParam)) {
@@ -27,55 +52,115 @@ export default function Home() {
     }
   }, [stateParam]);
 
-  // Show the appropriate view based on user's current state
-  return (
-    <div className="p-4">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            className="h-6 w-6 mr-2 text-blue-600 dark:text-blue-400"
-          >
-            <path
-              d="M3 18h18M3 12h18M3 6h18"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          Prorosca
-        </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Sail Together, Save Together
-        </p>
-      </header>
+  useEffect(() => {
+    // TODO: Replace with actual contract calls
+    const fetchStats = async () => {
+      // Mock stats for now
+      setStats({
+        totalSails: 42,
+        totalFunds: 156.8,
+        activeSails: 12,
+        successfulVoyages: 30
+      });
+    };
 
-      {/* For demo purposes, add state selector */}
-      <div className="mb-6 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg text-xs">
-        <p className="font-medium text-blue-800 dark:text-blue-300 mb-2">Demo Controls:</p>
-        <div className="flex flex-wrap gap-2">
-          {["sailing", "not-sailing", "marooned", "crew-incident"].map((state) => (
-            <button
-              key={state}
-              onClick={() => setUserState(state as UserState)}
-              className={`px-3 py-1 rounded-full ${
-                userState === state
-                  ? "bg-blue-600 text-white"
-                  : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200"
-              }`}
-            >
-              {state}
-            </button>
-          ))}
+    fetchStats();
+  }, []);
+
+  const handleConnect = async () => {
+    // TODO: Implement actual wallet connection
+    setIsWalletConnected(true);
+  };
+
+  const handleCreateSail = (sailData: {
+    name: string;
+    monthlyPrincipal: number;
+    crewmatesCount: number;
+    durationInDays: number;
+  }) => {
+    const newSail: SailData = {
+      id: sails.length + 1,
+      name: sailData.name,
+      monthlyPrincipal: sailData.monthlyPrincipal,
+      crewmatesCount: sailData.crewmatesCount,
+      currentRound: 0,
+      highestBid: 0,
+      topBidder: '',
+      isSailing: true,
+      startTime: new Date(),
+      nextPayoutTime: new Date(Date.now() + sailData.durationInDays * 24 * 60 * 60 * 1000),
+      captain: '0x1234...', // This will be the connected wallet address
+    };
+
+    setSails([...sails, newSail]);
+  };
+
+  const handlePlaceBid = (sailId: number, amount: number) => {
+    setSails(sails.map(sail => {
+      if (sail.id === sailId) {
+        return {
+          ...sail,
+          highestBid: amount,
+          topBidder: '0x1234...', // This will be the connected wallet address
+        };
+      }
+      return sail;
+    }));
+  };
+
+  const handleAbandonShip = (sailId: number) => {
+    setSails(sails.map(sail => {
+      if (sail.id === sailId) {
+        return {
+          ...sail,
+          isSailing: false,
+        };
+      }
+      return sail;
+    }));
+  };
+
+  if (!isWalletConnected) {
+    return <LandingPage onConnect={handleConnect} stats={stats} />;
+  }
+
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-950">
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-blue-100 mb-4">
+            ProRosca Funding Sails ⛵
+          </h1>
+          <p className="text-xl text-blue-300 max-w-2xl mx-auto">
+            Join AI-captained funding circles, bid for the treasure chest, and sail through rounds of funding with your fellow founders.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-100 mb-6">Launch New Sail</h2>
+            <CreateSail onCreateSail={handleCreateSail} />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-blue-100 mb-6">Active Sails</h2>
+            <div className="space-y-6">
+              {sails.map(sail => (
+                <Sail
+                  key={sail.id}
+                  {...sail}
+                  onPlaceBid={handlePlaceBid}
+                  onAbandonShip={handleAbandonShip}
+                />
+              ))}
+              {sails.length === 0 && (
+                <div className="text-center p-8 bg-white/5 rounded-lg border-2 border-blue-500/20">
+                  <p className="text-blue-300">No sails launched yet. Be the first captain! 🚢</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
-
-      {userState === "sailing" && <SailingView />}
-      {userState === "not-sailing" && <NotSailingView />}
-      {userState === "marooned" && <MaroonedView />}
-      {userState === "crew-incident" && <CrewIncidentView />}
-    </div>
+    </main>
   );
 }

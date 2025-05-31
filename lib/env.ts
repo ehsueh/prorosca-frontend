@@ -13,11 +13,28 @@ const envSchema = z.object({
 });
 
 export function validateEnv() {
+  // In development, provide default values
+  if (process.env.NODE_ENV === 'development') {
+    if (!process.env.NEXT_PUBLIC_APP_ID) {
+      console.warn('⚠️ NEXT_PUBLIC_APP_ID not set, using development default');
+      process.env.NEXT_PUBLIC_APP_ID = 'app_staging_dev';
+    }
+    if (!process.env.NEXT_PUBLIC_LENDING_CONTRACT_ADDRESS) {
+      console.warn('⚠️ NEXT_PUBLIC_LENDING_CONTRACT_ADDRESS not set, using zero address');
+      process.env.NEXT_PUBLIC_LENDING_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000';
+    }
+    if (!process.env.NEXT_PUBLIC_WORLD_CHAIN_RPC_URL) {
+      console.warn('⚠️ Using default Worldcoin Sepolia RPC URL');
+      process.env.NEXT_PUBLIC_WORLD_CHAIN_RPC_URL = 'https://worldchain-sepolia.g.alchemy.com/public';
+    }
+    return;
+  }
+
   try {
     const env = {
       NEXT_PUBLIC_APP_ID: process.env.NEXT_PUBLIC_APP_ID,
       NEXT_PUBLIC_LENDING_CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_LENDING_CONTRACT_ADDRESS,
-      NEXT_PUBLIC_WORLD_CHAIN_RPC_URL: process.env.NEXT_PUBLIC_WORLD_CHAIN_RPC_URL || 'https://worldchain-mainnet.g.alchemy.com/public',
+      NEXT_PUBLIC_WORLD_CHAIN_RPC_URL: process.env.NEXT_PUBLIC_WORLD_CHAIN_RPC_URL || 'https://worldchain-sepolia.g.alchemy.com/public',
     };
 
     envSchema.parse(env);
@@ -26,10 +43,14 @@ export function validateEnv() {
       const missingVars = error.errors.map(err => err.message).join('\n');
       throw new Error(
         `Environment Validation Failed\n\n${missingVars}\n\n` +
-        `Please check your Netlify environment variables:\n` +
-        `1. Go to Netlify dashboard > Site settings > Environment variables\n` +
+        `Please check your environment variables:\n` +
+        `1. Create a .env.local file in your project root\n` +
         `2. Ensure all required variables are set\n` +
-        `3. Trigger a new deployment after setting the variables`
+        `3. Restart the development server\n\n` +
+        `For production deployments:\n` +
+        `1. Go to your deployment platform settings\n` +
+        `2. Add the required environment variables\n` +
+        `3. Trigger a new deployment`
       );
     }
     throw error;
