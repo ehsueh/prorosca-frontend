@@ -114,7 +114,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
               <div>
                 <h4 className="font-medium mb-1">Join a Crew</h4>
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  We'll match you with other sailors with similar savings goals
+                  We&apos;ll match you with other sailors with similar savings goals
                 </p>
               </div>
             </div>
@@ -211,7 +211,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-slate-500 mt-1">
-                  This is approximately the amount you'll receive when you win
+                  This is approximately the amount you&apos;ll receive when you win
                 </p>
               </div>
               
@@ -222,7 +222,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                   name="projectDescription"
                   value={formData.projectDescription}
                   onChange={handleFormChange}
-                  placeholder="Tell us about the project you're founding... (optional)"
+                  placeholder="Tell us about the project you&apos;re founding... (optional)"
                   className="w-full min-h-[100px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 />
                 <p className="text-xs text-slate-500 mt-1">
@@ -311,7 +311,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
         <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-6"></div>
         <h2 className="text-xl font-bold mb-2">Finding Your Crew</h2>
         <p className="text-slate-500 dark:text-slate-400 text-center max-w-xs">
-          We're matching you with sailors who share similar saving goals and timeframes...
+          We&apos;re matching you with sailors who share similar saving goals and timeframes...
         </p>
       </div>
     );
@@ -324,7 +324,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
         <div className="bg-gradient-to-br from-emerald-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
           <h2 className="text-xl font-bold mb-2">Crew Found!</h2>
           <p className="text-white/80 mb-4">
-            You've been matched with a crew of 5 sailors
+            You&apos;ve been matched with a crew of 5 sailors
           </p>
           <div className="bg-white/10 rounded-lg p-3">
             <div className="flex justify-between mb-2">
@@ -371,7 +371,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
               <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">If you win with this bid:</h4>
                 <div className="flex justify-between text-sm">
-                  <span>You'll receive</span>
+                  <span>You&apos;ll receive</span>
                   <span className="font-medium">
                     ${(parseInt(formData.budget) * 5 * (1 - parseFloat(initialBid) / 100)).toFixed(2)}
                   </span>
