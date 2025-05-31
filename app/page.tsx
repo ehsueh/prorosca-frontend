@@ -63,33 +63,33 @@ function HomeContent() {
   }
 
   const options = [
-    {
-      title: "Create Circle",
-      description: "Start a new funding circle and invite others to join",
-      icon: <PlusCircle className="h-8 w-8 text-slate-900 dark:text-blue-400" />,
-      onClick: () => router.push("/create"),
-      color: "from-blue-500/20 to-blue-600/20"
-    },
-    {
-      title: "Join Circle",
-      description: "Browse and join existing funding circles",
-      icon: <Users className="h-8 w-8 text-slate-900 dark:text-green-400" />,
-      onClick: () => router.push("/join"),
-      color: "from-green-500/20 to-green-600/20"
-    },
-    {
-      title: "Active Circles",
-      description: "View and manage your active funding circles",
-      icon: <Ship className="h-8 w-8 text-slate-900 dark:text-purple-400" />,
-      onClick: () => router.push("/active"),
-      color: "from-purple-500/20 to-purple-600/20"
-    },
+    // {
+    //   title: "Create Circle",
+    //   description: "Start a new funding circle and invite others to join",
+    //   icon: <PlusCircle className="h-8 w-8 text-slate-900 dark:text-blue-400" />,
+    //   onClick: () => router.push("/create"),
+    //   color: "from-blue-500/20 to-blue-600/20"
+    // },
+    // {
+    //   title: "Set Sail",
+    //   description: "Set your desired target loan and set sail!",
+    //   icon: <Users className="h-8 w-8 text-slate-900 dark:text-green-400" />,
+    //   onClick: () => router.push("/join"),
+    //   color: "from-green-500/20 to-green-600/20"
+    // },
+    // {
+    //   title: "Active Circles",
+    //   description: "View and manage your active funding circles",
+    //   icon: <Ship className="h-8 w-8 text-slate-900 dark:text-purple-400" />,
+    //   onClick: () => router.push("/active"),
+    //   color: "from-purple-500/20 to-purple-600/20"
+    // },
     {
       title: "History",
       description: "View your past funding circles and transactions",
       icon: <History className="h-8 w-8 text-slate-900 dark:text-orange-400" />,
       onClick: () => router.push("/history"),
-      color: "from-orange-500/20 to-orange-600/20"
+      color: "from-blue-500/20 to-blue-600/20"
     }
   ];
 
@@ -125,11 +125,11 @@ function HomeContent() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-950">
+    <main className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-slate-900 dark:text-blue-100 mb-4">
-            ProRosca Funding Circles ⛵
+            ⛵ Founders Lending 
           </h1>
           <p className="text-xl text-slate-700 dark:text-blue-300 max-w-2xl mx-auto">
             Join funding circles, bid for the treasure chest, and sail through rounds of funding with your fellow founders.
@@ -194,7 +194,7 @@ function HomeContent() {
 
         {/* Stats */}
         <div className="mt-12 text-center">
-          <div className="inline-grid grid-cols-2 md:grid-cols-4 gap-4 bg-white/5 rounded-lg p-4">
+          <div className="inline-grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">
             <div>
               <p className="text-2xl font-bold text-slate-900 dark:text-blue-100">{stats.totalSails}</p>
               <p className="text-sm text-slate-700 dark:text-blue-300">Total Circles</p>

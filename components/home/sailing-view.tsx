@@ -75,7 +75,7 @@ export function SailingView() {
           </span>
         </div>
         
-        <Progress value={progressPercentage} className="h-2 bg-blue-600/50" />
+        <Progress value={progressPercentage} className="h-2 bg-blue-200/50 dark:bg-blue-800/50" />
         
         <div className="flex justify-between mt-3 text-sm">
           <span>Round {data.currentRound}</span>

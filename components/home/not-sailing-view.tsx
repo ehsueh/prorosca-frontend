@@ -19,6 +19,7 @@ interface NotSailingViewProps {
     loanTargetAmount: string;
     loanTargetCurrency: string;
     urgency: string;
+    projectDescription: string;
   }) => Promise<void>;
 }
 
@@ -29,11 +30,12 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
     currency: "USDC",
     loanTarget: "2400",
     urgency: "sooner-than-later",
+    projectDescription: "",
   });
   const [initialBid, setInitialBid] = useState("7.5");
 
   const handleFormChange = (
-    e: React.ChangeEvent<HTMLInputElement> | { target: { name: string; value: string } }
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | { target: { name: string; value: string } }
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -62,6 +64,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
         loanTargetAmount: formData.loanTarget,
         loanTargetCurrency: formData.currency,
         urgency: formData.urgency,
+        projectDescription: formData.projectDescription,
       });
       
       // Simulate matching delay for demo purposes
@@ -96,7 +99,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
             onClick={() => setStep("form")} 
             className="bg-blue-500 hover:bg-blue-600 text-white"
           >
-            Join a Circle <ArrowRight className="ml-2 h-4 w-4" />
+            Set Sail <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
 
@@ -213,6 +216,21 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
               </div>
               
               <div>
+                <Label htmlFor="projectDescription">About Your Project</Label>
+                <textarea
+                  id="projectDescription"
+                  name="projectDescription"
+                  value={formData.projectDescription}
+                  onChange={handleFormChange}
+                  placeholder="Tell us about the project you're founding... (optional)"
+                  className="w-full min-h-[100px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                />
+                <p className="text-xs text-slate-500 mt-1">
+                  This helps the captain find match crewmates you can sail and synergize with!
+                </p>
+              </div>
+
+              <div>
                 <Label>Urgency</Label>
                 <RadioGroup 
                   defaultValue={formData.urgency}
@@ -227,7 +245,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                     />
                     <Label
                       htmlFor="urgency-now"
-                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-950/50 dark:hover:border-blue-800 peer-data-[state=checked]:bg-blue-50 dark:peer-data-[state=checked]:bg-blue-950/50 peer-data-[state=checked]:border-blue-500 dark:peer-data-[state=checked]:border-blue-500"
                     >
                       <Clock className="h-4 w-4 mb-1" />
                       <span className="text-xs">Now</span>
@@ -242,7 +260,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                     />
                     <Label
                       htmlFor="urgency-soon"
-                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-950/50 dark:hover:border-blue-800 peer-data-[state=checked]:bg-blue-50 dark:peer-data-[state=checked]:bg-blue-950/50 peer-data-[state=checked]:border-blue-500 dark:peer-data-[state=checked]:border-blue-500"
                     >
                       <Clock className="h-4 w-4 mb-1" />
                       <span className="text-xs">Soon</span>
@@ -257,7 +275,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                     />
                     <Label
                       htmlFor="urgency-later"
-                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-950/50 dark:hover:border-blue-800 peer-data-[state=checked]:bg-blue-50 dark:peer-data-[state=checked]:bg-blue-950/50 peer-data-[state=checked]:border-blue-500 dark:peer-data-[state=checked]:border-blue-500"
                     >
                       <Clock className="h-4 w-4 mb-1" />
                       <span className="text-xs">Anytime</span>
