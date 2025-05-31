@@ -1,7 +1,123 @@
 // Mock data for development and demo purposes
 
+export interface Sail {
+  id: number;
+  name: string;
+  monthlyPrincipal: number;
+  totalCrewmates: number;
+  currentCrewmates: number;
+  startTime: string;
+  nextPayoutTime: string;
+  currentRound: number;
+  totalRounds: number;
+  highestBid: {
+    bidder: string;
+    amount: number;
+    timestamp: string;
+  };
+  status: 'active' | 'completed' | 'abandoned';
+  captain: string;
+  yourContribution?: number;
+  yourInterestRate?: number;
+  hasWon?: boolean;
+  roundWinner?: string;
+}
+
+export const mockActiveSails: Sail[] = [
+  {
+    id: 1,
+    name: "Ethereum Explorers",
+    monthlyPrincipal: 0.5,
+    totalCrewmates: 5,
+    currentCrewmates: 5,
+    startTime: "2024-03-15T10:00:00Z",
+    nextPayoutTime: new Date(Date.now() + 1000 * 60 * 30).toISOString(), // 30 mins from now
+    currentRound: 2,
+    totalRounds: 5,
+    highestBid: {
+      bidder: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+      amount: 1200, // 12% interest
+      timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString() // 5 mins ago
+    },
+    status: 'active',
+    captain: "0x123...789",
+    yourContribution: 0.5,
+    yourInterestRate: 1000, // 10%
+    hasWon: false
+  },
+  {
+    id: 2,
+    name: "DeFi Voyagers",
+    monthlyPrincipal: 1,
+    totalCrewmates: 3,
+    currentCrewmates: 3,
+    startTime: "2024-03-10T15:00:00Z",
+    nextPayoutTime: new Date(Date.now() + 1000 * 60 * 15).toISOString(), // 15 mins from now
+    currentRound: 1,
+    totalRounds: 3,
+    highestBid: {
+      bidder: "0x123...456",
+      amount: 800, // 8% interest
+      timestamp: new Date(Date.now() - 1000 * 60 * 10).toISOString() // 10 mins ago
+    },
+    status: 'active',
+    captain: "0x456...abc",
+    yourContribution: 1,
+    yourInterestRate: 0,
+    hasWon: false
+  }
+];
+
+export const mockHistoricalSails: Sail[] = [
+  {
+    id: 3,
+    name: "Web3 Pioneers",
+    monthlyPrincipal: 0.3,
+    totalCrewmates: 4,
+    currentCrewmates: 4,
+    startTime: "2024-02-01T10:00:00Z",
+    nextPayoutTime: "2024-03-01T10:00:00Z",
+    currentRound: 4,
+    totalRounds: 4,
+    highestBid: {
+      bidder: "0x789...def",
+      amount: 1500,
+      timestamp: "2024-03-01T09:55:00Z"
+    },
+    status: 'completed',
+    captain: "0x789...def",
+    yourContribution: 0.3,
+    yourInterestRate: 1200,
+    hasWon: true,
+    roundWinner: "You"
+  },
+  {
+    id: 4,
+    name: "NFT Navigators",
+    monthlyPrincipal: 0.8,
+    totalCrewmates: 6,
+    currentCrewmates: 6,
+    startTime: "2024-01-15T12:00:00Z",
+    nextPayoutTime: "2024-02-15T12:00:00Z",
+    currentRound: 3,
+    totalRounds: 6,
+    highestBid: {
+      bidder: "0xabc...123",
+      amount: 900,
+      timestamp: "2024-02-15T11:50:00Z"
+    },
+    status: 'abandoned',
+    captain: "0xdef...456",
+    yourContribution: 0.8,
+    yourInterestRate: 800,
+    hasWon: false,
+    roundWinner: "0xabc...123"
+  }
+];
+
 export const mockUserState = {
-  state: "sailing", // "sailing" | "not-sailing" | "marooned" | "crew-incident"
+  state: "sailing",
+  address: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
 };
 
 export const mockSailingData = {

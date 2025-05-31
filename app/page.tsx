@@ -85,8 +85,8 @@ function HomeContent() {
     //   color: "from-purple-500/20 to-purple-600/20"
     // },
     {
-      title: "History",
-      description: "View your past funding circles and transactions",
+      title: "Sailing History",
+      description: "View your past voyages and transactions",
       icon: <History className="h-8 w-8 text-slate-900 dark:text-orange-400" />,
       onClick: () => router.push("/history"),
       color: "from-blue-500/20 to-blue-600/20"
@@ -132,7 +132,7 @@ function HomeContent() {
             ⛵ Founders Lending 
           </h1>
           <p className="text-xl text-slate-700 dark:text-blue-300 max-w-2xl mx-auto">
-            Join funding circles, bid for the treasure chest, and sail through rounds of funding with your fellow founders.
+            Apply to join funding circles and get matched with the perfect crew by our AI captains. Bid for the treasure chest and sail through rounds of funding with your fellow founders.
           </p>
         </div>
 
@@ -165,7 +165,7 @@ function HomeContent() {
 
         {/* Navigation Options */}
         <div className="mt-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {options.map((option, index) => (
               <Card
                 key={index}
