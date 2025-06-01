@@ -1,18 +1,28 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
+import { MiniKit } from '@worldcoin/minikit-js';
 
 interface SafeMiniKitProviderProps {
   children: ReactNode;
   appId?: string;
 }
 
-export function SafeMiniKitProvider({ children }: SafeMiniKitProviderProps) {
+export function SafeMiniKitProvider({ children, appId }: SafeMiniKitProviderProps) {
   // In development, just render children without the provider
   if (process.env.NODE_ENV === 'development') {
     return <>{children}</>;
   }
 
-  // For production, you would add back the MiniKit integration
+  useEffect(() => {
+    if (!MiniKit.isInstalled()) {
+      try {
+        MiniKit.install(appId || process.env.NEXT_PUBLIC_APP_ID || '');
+      } catch (error) {
+        console.error('Failed to install MiniKit:', error);
+      }
+    }
+  }, [appId]);
+
   return <>{children}</>;
 } 
