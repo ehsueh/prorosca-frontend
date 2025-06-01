@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { MiniKit } from '@worldcoin/minikit-js';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   isSignedIn: boolean;
@@ -13,6 +14,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check localStorage on initial load
+    const storedAuth = localStorage.getItem('isSignedIn');
+    if (storedAuth === 'true') {
+      setIsSignedIn(true);
+    }
+  }, []);
 
   const signInWithWallet = async () => {
     if (!MiniKit.isInstalled()) {
@@ -48,6 +58,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log('responseJson:', responseJson);
       if (responseJson.status === 'success') {
         setIsSignedIn(true);
+        localStorage.setItem('isSignedIn', 'true');
+        router.push('/');
       }
     }
   };
