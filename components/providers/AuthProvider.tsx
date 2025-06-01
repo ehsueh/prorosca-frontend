@@ -24,19 +24,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const navigateToHome = () => {
-    // In World App's WebView, we need to handle navigation differently
-    if (typeof window !== 'undefined' && window.location.href.includes('world.org')) {
-      // Use window.location for World App WebView
-      window.location.href = '/';
-    } else {
-      // For regular web browsers, try router first, then fallback to window.location
-      try {
+  const navigateToHome = async () => {
+    try {
+      if (process.env.NODE_ENV === 'development') {
         router.push('/');
-      } catch (e) {
-        console.log('Router push failed, using window.location');
-        window.location.href = '/';
+        return;
       }
+
+      // In World App's WebView, use history API for smoother navigation
+      if (MiniKit.isInstalled()) {
+        window.history.replaceState({}, '', '/');
+        // Force a reload to ensure the app state is updated
+        window.location.reload();
+      } else {
+        // Fallback to regular navigation
+        router.push('/');
+      }
+    } catch (error) {
+      console.error('Navigation error:', error);
+      // Last resort fallback
+      window.location.href = '/';
     }
   };
 
@@ -47,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log('Development mode: signing in directly');
         setIsSignedIn(true);
         localStorage.setItem('isSignedIn', 'true');
-        navigateToHome();
+        await navigateToHome();
         return;
       }
 
@@ -85,8 +92,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsSignedIn(true);
         localStorage.setItem('isSignedIn', 'true');
         
-        // Use the navigation helper that handles World App environment
-        navigateToHome();
+        // Navigate using the updated navigation helper
+        await navigateToHome();
       }
     } catch (error) {
       console.error('Authentication error:', error);
@@ -100,10 +107,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-} 
+}; 
