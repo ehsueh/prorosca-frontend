@@ -22,7 +22,7 @@ Prorosca is a decentralized lending platform built on World Chain, enabling secu
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/prorosca-frontend.git
+git clone https://github.com/ehsueh/prorosca-frontend.git   
 cd prorosca-frontend
 ```
 
@@ -31,11 +31,20 @@ cd prorosca-frontend
 npm install --legacy-peer-deps
 ```
 
-3. Create a `.env` file in the root directory:
+3. Create a `.env.local` file in the root directory:
 ```env
 NEXT_PUBLIC_WORLD_APP_ID=your_world_app_id
 NEXT_PUBLIC_LENDING_CONTRACT_ADDRESS=your_contract_address
 NEXT_PUBLIC_WORLD_CHAIN_RPC_URL=https://rpc.world.org
+
+APP_ID='World Mini App ID'
+DEV_PORTAL_API_KEY='World Developer Portal API Key'
+WLD_CLIENT_ID='World Mini App ID'
+WLD_CLIENT_SECRET='World Mini App Client Secret'
+AUTH_URL='Your production or dev web server url' # For testing this should be your NGROK URL and for production this should be your production URL
+AUTH_SECRET="Added by `npx auth`" # Read more: https://cli.authjs.dev
+HMAC_SECRET_KEY='some-secret' # create this by running `openssl rand -base64 32`
+OPENAI_API_KEY=""
 ```
 
 4. Run the development server:
@@ -76,7 +85,7 @@ The project is configured for deployment on Netlify:
 1. Connect your repository to Netlify
 2. Configure environment variables in Netlify:
    - Site settings > Environment variables
-   - Add all required variables (see `.env` section)
+   - Add all required variables (see `.env.local` section)
 3. Deploy using the provided `netlify.toml` configuration
 
 ## 🤝 Contributing
