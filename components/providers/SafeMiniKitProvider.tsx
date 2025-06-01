@@ -9,13 +9,8 @@ interface SafeMiniKitProviderProps {
 }
 
 export function SafeMiniKitProvider({ children, appId }: SafeMiniKitProviderProps) {
-  // In development, just render children without the provider
-  if (process.env.NODE_ENV === 'development') {
-    return <>{children}</>;
-  }
-
   useEffect(() => {
-    if (!MiniKit.isInstalled()) {
+    if (process.env.NODE_ENV !== 'development' && !MiniKit.isInstalled()) {
       try {
         MiniKit.install(appId || process.env.NEXT_PUBLIC_APP_ID || '');
       } catch (error) {
