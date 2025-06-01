@@ -14,12 +14,9 @@ type OnboardingStep = "intro" | "form" | "matching" | "bid";
 
 interface NotSailingViewProps {
   onJoinSail: (formData: {
-    contributionAmount: string;
-    contributionCurrency: string;
-    loanTargetAmount: string;
-    loanTargetCurrency: string;
-    urgency: string;
-    projectDescription: string;
+    monthlyBudget: number;
+    desiredLoanAmount: number;
+    urgency: number;
   }) => Promise<void>;
 }
 
@@ -56,17 +53,14 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     setStep("matching");
-    
+
     try {
       await onJoinSail({
-        contributionAmount: formData.budget,
-        contributionCurrency: formData.currency,
-        loanTargetAmount: formData.loanTarget,
-        loanTargetCurrency: formData.currency,
-        urgency: formData.urgency,
-        projectDescription: formData.projectDescription,
+        monthlyBudget: Number(formData.budget),
+        desiredLoanAmount: Number(formData.loanTarget),
+        urgency: Number(formData.urgency),
       });
-      
+
       // Simulate matching delay for demo purposes
       setTimeout(() => {
         setStep("bid");
@@ -95,8 +89,8 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
           <p className="text-slate-300 mb-4">
             Join a savings circle to start your voyage toward financial goals
           </p>
-          <Button 
-            onClick={() => setStep("form")} 
+          <Button
+            onClick={() => setStep("form")}
             className="bg-blue-500 hover:bg-blue-600 text-white"
           >
             Set Sail <ArrowRight className="ml-2 h-4 w-4" />
@@ -105,7 +99,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
 
         <div className="space-y-3">
           <h3 className="text-lg font-medium">How It Works</h3>
-          
+
           <Card className="p-4">
             <div className="flex items-start">
               <div className="h-7 w-7 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 mr-3 shrink-0">
@@ -119,7 +113,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
               </div>
             </div>
           </Card>
-          
+
           <Card className="p-4">
             <div className="flex items-start">
               <div className="h-7 w-7 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 mr-3 shrink-0">
@@ -133,7 +127,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
               </div>
             </div>
           </Card>
-          
+
           <Card className="p-4">
             <div className="flex items-start">
               <div className="h-7 w-7 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 mr-3 shrink-0">
@@ -157,7 +151,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
     return (
       <div className="space-y-4">
         <h2 className="text-xl font-bold mb-4">Set Your Sailing Parameters</h2>
-        
+
         <form onSubmit={handleSubmitForm}>
           <Card className="p-4 mb-4">
             <div className="space-y-4">
@@ -178,8 +172,8 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                     onChange={handleFormChange}
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center">
-                    <Select 
-                      value={formData.currency} 
+                    <Select
+                      value={formData.currency}
                       onValueChange={handleCurrencyChange}
                     >
                       <SelectTrigger className="w-20 border-0">
@@ -194,11 +188,11 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="loanTarget">Desired Loan Target</Label>
-                <Select 
-                  value={formData.loanTarget} 
+                <Select
+                  value={formData.loanTarget}
                   onValueChange={handleLoanTargetChange}
                 >
                   <SelectTrigger className="w-full">
@@ -230,18 +224,19 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                 </p>
               </div>
 
+
               <div>
                 <Label>Urgency</Label>
-                <RadioGroup 
+                <RadioGroup
                   defaultValue={formData.urgency}
                   onValueChange={handleUrgencyChange}
                   className="grid grid-cols-3 gap-2 mt-2"
                 >
                   <div>
-                    <RadioGroupItem 
-                      value="now" 
-                      id="urgency-now" 
-                      className="peer sr-only" 
+                    <RadioGroupItem
+                      value="now"
+                      id="urgency-now"
+                      className="peer sr-only"
                     />
                     <Label
                       htmlFor="urgency-now"
@@ -251,12 +246,12 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                       <span className="text-xs">Now</span>
                     </Label>
                   </div>
-                  
+
                   <div>
-                    <RadioGroupItem 
-                      value="sooner-than-later" 
-                      id="urgency-soon" 
-                      className="peer sr-only" 
+                    <RadioGroupItem
+                      value="sooner-than-later"
+                      id="urgency-soon"
+                      className="peer sr-only"
                     />
                     <Label
                       htmlFor="urgency-soon"
@@ -266,12 +261,12 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                       <span className="text-xs">Soon</span>
                     </Label>
                   </div>
-                  
+
                   <div>
-                    <RadioGroupItem 
-                      value="dont-care" 
-                      id="urgency-later" 
-                      className="peer sr-only" 
+                    <RadioGroupItem
+                      value="dont-care"
+                      id="urgency-later"
+                      className="peer sr-only"
                     />
                     <Label
                       htmlFor="urgency-later"
@@ -285,15 +280,15 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
               </div>
             </div>
           </Card>
-          
+
           <div className="space-y-2">
             <Button type="submit" className="w-full">
               Commit & Pay First Round
             </Button>
-            <Button 
-              type="button" 
-              variant="outline" 
-              className="w-full" 
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
               onClick={() => setStep("intro")}
             >
               Go Back
@@ -341,7 +336,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
             </div>
           </div>
         </div>
-        
+
         <Card className="p-4">
           <h3 className="text-lg font-bold mb-4">Set Your Initial Bid</h3>
           <form onSubmit={handleSubmitBid}>
@@ -367,7 +362,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                   Higher bids have a better chance of winning, but it also means you will be paying more interest!
                 </p>
               </div>
-              
+
               <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">If you win with this bid:</h4>
                 <div className="flex justify-between text-sm">
@@ -377,7 +372,7 @@ export function NotSailingView({ onJoinSail }: NotSailingViewProps) {
                   </span>
                 </div>
               </div>
-              
+
               <Button type="submit" className="w-full">
                 Set Bid & Join Circle
               </Button>

@@ -1,4 +1,4 @@
-export const ABI = [
+[
 	{
 		"inputs": [
 			{
@@ -865,7 +865,4 @@ export const ABI = [
 		"stateMutability": "view",
 		"type": "function"
 	}
-];
-
-export const CONTRACT_ADDRESS =
-    "0x388c0CB0393B6D82BCf7D45978879bff859487f9";
+]
