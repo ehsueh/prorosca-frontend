@@ -5,9 +5,9 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { TransactionProvider } from '@/components/providers/TransactionProvider';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { WagmiProvider } from '@/components/providers/WagmiProvider';
+import { SafeMiniKitProvider } from '@/components/providers/SafeMiniKitProvider';
 import Navigation from '@/components/navigation';
 import Image from 'next/image';
-import { MiniKitProvider } from '@worldcoin/minikit-js/minikit-provider';
 import { validateEnv } from '@/lib/env';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -67,9 +67,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} bg-background min-h-screen`} suppressHydrationWarning>
         <WagmiProvider>
-          <MiniKitProvider props={{
-            appId: process.env.NEXT_PUBLIC_APP_ID,
-          }}>
+          <SafeMiniKitProvider appId={process.env.NEXT_PUBLIC_APP_ID}>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               <AuthProvider>
                 <TransactionProvider>
@@ -88,7 +86,7 @@ export default function RootLayout({
                 </TransactionProvider>
               </AuthProvider>
             </ThemeProvider>
-          </MiniKitProvider>
+          </SafeMiniKitProvider>
         </WagmiProvider>
       </body>
     </html>
