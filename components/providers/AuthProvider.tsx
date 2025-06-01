@@ -24,28 +24,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const signInWithWallet = async () => {
-    // In development, always sign in
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Development mode: signing in directly');
-      setIsSignedIn(true);
-      return;
-    }
-
-    const res = await fetch(`/api/nonce`);
-    const { nonce } = await res.json();
-
-    const { commandPayload: generateMessageResult, finalPayload } = await MiniKit.commandsAsync.walletAuth({
-      nonce: nonce,
-      requestId: '0',
-      expirationTime: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-      notBefore: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-      statement: 'This is my statement and here is a link https://worldcoin.com/apps',
-    });
-
-    if (finalPayload.status === 'error') {
-      return;
+  const navigateToHome = () => {
+    // In World App's WebView, we need to handle navigation differently
+    if (typeof window !== 'undefined' && window.location.href.includes('world.org')) {
+      // Use window.location for World App WebView
+      window.location.href = '/';
     } else {
+      // For regular web browsers, try router first, then fallback to window.location
+      try {
+        router.push('/');
+      } catch (e) {
+        console.log('Router push failed, using window.location');
+        window.location.href = '/';
+      }
+    }
+  };
+
+  const signInWithWallet = async () => {
+    try {
+      // In development, always sign in
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Development mode: signing in directly');
+        setIsSignedIn(true);
+        localStorage.setItem('isSignedIn', 'true');
+        navigateToHome();
+        return;
+      }
+
+      const res = await fetch(`/api/nonce`);
+      const { nonce } = await res.json();
+
+      const { commandPayload: generateMessageResult, finalPayload } = await MiniKit.commandsAsync.walletAuth({
+        nonce: nonce,
+        requestId: '0',
+        expirationTime: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+        notBefore: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+        statement: 'This is my statement and here is a link https://worldcoin.com/apps',
+      });
+
+      if (finalPayload.status === 'error') {
+        console.error('Authentication failed:', finalPayload);
+        return;
+      }
+
       const response = await fetch('/api/complete-siwe', {
         method: 'POST',
         headers: {
@@ -59,11 +80,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const responseJson = await response.json();
       console.log('responseJson:', responseJson);
+      
       if (responseJson.status === 'success') {
         setIsSignedIn(true);
         localStorage.setItem('isSignedIn', 'true');
-        router.push('/');
+        
+        // Use the navigation helper that handles World App environment
+        navigateToHome();
       }
+    } catch (error) {
+      console.error('Authentication error:', error);
     }
   };
 
