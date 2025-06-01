@@ -1,5 +1,4 @@
-# <img src="/prorosca_transparent.png" alt="Prorosca Logo" width="300"/>
-![Prorosca Logo](public/prorosca_transparent.png)
+![Prorosca Logo](public/Prorosca_transparent.png)
 
 Prorosca is a decentralized lending platform built on World Chain, enabling secure and transparent lending within sailing communities. The platform leverages World ID for human verification and provides a seamless experience through World App integration.
 
